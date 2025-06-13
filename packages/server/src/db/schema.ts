@@ -5,5 +5,6 @@ export const users = sqliteTable("users", {
     login: text().notNull(),
     password: text().notNull(),
     name: text().notNull(),
-    registered: int({ mode: "timestamp" }).notNull()
+    registered: int({ mode: "timestamp" }).notNull(),
+    role: text({ enum: ["admin", "user"] }).notNull().default("user")
 });
