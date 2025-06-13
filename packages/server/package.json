@@ -3,12 +3,21 @@
     "type": "module",
     "private": true,
     "scripts": {
-        "dev": "bun run --watch src/index.ts"
+        "dev": "bun run --watch src/index.ts",
+        "start": "bun run src/index.ts",
+        "db_generate": "bunx drizzle-kit generate",
+        "db_migrate": "bun run migrate.ts",
+        "db_studio": "bunx drizzle-kit studio --verbose"
     },
     "devDependencies": {
-        "@types/bun": "latest"
+        "@types/bun": "^1.2.16",
+        "better-sqlite3": "^11.10.0",
+        "drizzle-kit": "^0.31.1"
     },
     "peerDependencies": {
         "typescript": "^5"
+    },
+    "dependencies": {
+        "drizzle-orm": "^0.44.2"
     }
 }
