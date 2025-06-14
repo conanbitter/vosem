@@ -1,4 +1,4 @@
-import { eq } from "drizzle-orm";
+/*import { eq } from "drizzle-orm";
 import { db } from "./db/db";
 import * as schema from "./db/schema";
 
@@ -16,4 +16,18 @@ if (admin.length > 0) {
     }
 } else {
     console.log("Can't find admin");
-}
+}*/
+import { Elysia } from "elysia";
+
+const app = new Elysia()
+    .get('/', ({ cookie: { auth } }) => {
+        if (auth!.value) {
+            return `Hello ${auth!.value}`;
+        } else {
+            auth!.value = "User";
+            return "Hello Elysia";
+        }
+    })
+    .listen(3000);
+
+console.log(`Server running at ${app.server?.hostname}:${app.server?.port}`);
