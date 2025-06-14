@@ -18,6 +18,7 @@ if (admin.length > 0) {
     console.log("Can't find admin");
 }*/
 import { Elysia, t } from "elysia";
+import { jwt } from '@elysiajs/jwt';
 import { db } from "./db/db";
 import { eq } from "drizzle-orm";
 import * as schema from "./db/schema";
@@ -30,21 +31,38 @@ const app = new Elysia()
             };
         }
     })
-    .get('/', ({ cookie: { auth } }) => {
-        if (auth!.value) {
-            return `Hello ${auth!.value}`;
+    .use(
+        jwt({
+            name: 'jwt',
+            secret: process.env.JWT_SECRET!
+        })
+    )
+    .get('/', async ({ jwt, cookie: { auth } }) => {
+        console.log(auth!.value);
+        const user = await jwt.verify(auth!.value);
+
+        if (!user) {
+            return "User not logged in";
         } else {
-            auth!.value = "User";
-            return "Hello Elysia";
+            return `Hello ${user.name}`;
         }
     })
-    .post('/login', async ({ body }) => {
+    .post('/login', async ({ jwt, cookie: { auth }, body }) => {
         const user = (await db.select().from(schema.users).where(eq(schema.users.login, body.login)))[0];
         if (!user) {
             return { "error": "Login or password is incorrect" };
         }
         if (await Bun.password.verify(body.password, user.password)) {
-            return { "error": "ok", "Name": user.name };
+            const token = await jwt.sign({ id: user.id, name: user.name });
+
+            auth!.set({
+                value: token,
+                httpOnly: true,
+                //secure: true,
+                sameSite: true,
+                maxAge: 7 * 86400
+            })
+            return { "error": "ok" };
         } else {
             return { "error": "Login or password is incorrect" };
         }
@@ -53,6 +71,10 @@ const app = new Elysia()
             login: t.String(),
             password: t.String()
         }, { error: "Incorrect request" })
+    })
+    .get('/logout', ({ cookie: { auth } }) => {
+        auth!.remove();
+        return { error: "ok" };
     })
     .listen(3000);
 
