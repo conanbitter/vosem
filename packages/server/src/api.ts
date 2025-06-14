@@ -67,7 +67,7 @@ export const apiRoutes = new Elysia()
         {
             async beforeHandle({ user }) {
                 if (!user) {
-                    return { error: "User not logged in" };
+                    return { error: "login" };
                 }
             }
         },
