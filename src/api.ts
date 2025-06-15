@@ -17,8 +17,8 @@ export const authPlugin = new Elysia()
         if (user) {
             return {
                 user: {
-                    id: user.id,
-                    name: user.name
+                    id: user.id as string,
+                    name: user.name as string
                 }
             };
         }

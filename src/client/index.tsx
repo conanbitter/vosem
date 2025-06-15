@@ -2,6 +2,6 @@
 /// <reference lib="dom.iterable" />
 
 import { hydrateRoot } from 'react-dom/client'
-import App from './App'
+import { ClientApp } from './App'
 
-hydrateRoot(document, <App />)
+hydrateRoot(document, <ClientApp />)
