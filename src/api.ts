@@ -24,7 +24,7 @@ export const authPlugin = new Elysia()
         }
     });
 
-export const apiRoutes = new Elysia()
+export const apiRoutes = new Elysia({ prefix: '/api' })
     .use(jwtPlugin)
     .use(authPlugin)
     .onError(({ code, error }) => {

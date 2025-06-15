@@ -1,6 +1,6 @@
 GET http://localhost:3000
 ###
-POST http://localhost:3000/login HTTP/1.1
+POST http://localhost:3000/api/login HTTP/1.1
 Content-Type: application/json
 
 {
@@ -8,6 +8,6 @@ Content-Type: application/json
     "password": "1234"
 }
 ###
-GET http://localhost:3000/logout
+GET http://localhost:3000/api/logout
 ###
-GET http://localhost:3000/test
+GET http://localhost:3000/api/test
