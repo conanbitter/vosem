@@ -3,18 +3,6 @@
   "workspaces": {
     "": {
       "name": "vosem",
-    },
-    "packages/client": {
-      "name": "vosem-client",
-      "devDependencies": {
-        "@types/bun": "latest",
-      },
-      "peerDependencies": {
-        "typescript": "^5",
-      },
-    },
-    "packages/server": {
-      "name": "vosem-server",
       "dependencies": {
         "@elysiajs/jwt": "^1.3.1",
         "drizzle-orm": "^0.44.2",
@@ -23,7 +11,7 @@
         "react-dom": "^19.1.0",
       },
       "devDependencies": {
-        "@types/bun": "^1.2.16",
+        "@types/bun": "latest",
         "@types/react": "^19.1.8",
         "@types/react-dom": "^19.1.6",
         "better-sqlite3": "^11.10.0",
@@ -238,10 +226,6 @@
     "undici-types": ["undici-types@7.8.0", "", {}, "sha512-9UJ2xGDvQ43tYyVMpuHlsgApydB8ZKfVYTsLDhXkFL/6gfkp+U8xTGdh8pMJv1SpZna0zxG1DwsKZsreLbXBxw=="],
 
     "util-deprecate": ["util-deprecate@1.0.2", "", {}, "sha512-EPD5q1uXyFxJpCrLnCc1nHnq3gOa6DZBocAIiI2TaSCA7VCJ1UJDMagCzIkXNsUYfD1daK//LTEQ8xiIbrHtcw=="],
-
-    "vosem-client": ["vosem-client@workspace:packages/client"],
-
-    "vosem-server": ["vosem-server@workspace:packages/server"],
 
     "wrappy": ["wrappy@1.0.2", "", {}, "sha512-l4Sp/DRseor9wL6EvV2+TuQn63dMkPjZ/sp9XkghTEbV9KlPS1xUsZ3u7/IQO4wxtcFB4bgpQPRcR3QCvezPcQ=="],
 
