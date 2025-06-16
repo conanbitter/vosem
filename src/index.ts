@@ -15,6 +15,7 @@ await Bun.build({
 const app = new Elysia()
     .use(staticPlugin())
     .use(authPlugin)
+    .get('/favicon.ico', () => Bun.file("favicon.ico"))
     .get('/*', async ({ params, user, redirect }) => {
         if (!user && params['*'] !== "login") {
             return redirect("/login");
