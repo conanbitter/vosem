@@ -1,19 +1,24 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { BrowserRouter, Link, Route, Routes, StaticRouter } from "react-router";
+import { GlobalData } from "./GlobalData";
 
 function React1() {
+    const username = useContext(GlobalData);
     return (
         <>
             <h3>React 1</h3>
+            <p>User {username}</p>
             <Link to="/react2">To react2</Link>
         </>
     )
 }
 
 function React2() {
+    const username = useContext(GlobalData);
     return (
         <>
             <h3>React 2</h3>
+            <p>User {username}</p>
             <Link to="/react1">To react1</Link>
         </>
     )
@@ -25,7 +30,7 @@ const routes = (
         <Route path="/react2" element={<React2 />} />
     </Routes>);
 
-export function ClientApp() {
+export function ClientApp({ username }: { username: string }) {
     return (
         <html>
             <head>
@@ -33,9 +38,11 @@ export function ClientApp() {
                 <title>React test</title>
             </head>
             <body>
-                <BrowserRouter>
-                    {routes}
-                </BrowserRouter>
+                <GlobalData value={username}>
+                    <BrowserRouter>
+                        {routes}
+                    </BrowserRouter>
+                </GlobalData>
             </body>
         </html>
     );
@@ -54,9 +61,11 @@ export function ServerApp({ location, user }: ServerParams) {
                 <title>React test</title>
             </head>
             <body>
-                <StaticRouter location={location}>
-                    {routes}
-                </StaticRouter>
+                <GlobalData value={user?.name || "Guest"}>
+                    <StaticRouter location={location}>
+                        {routes}
+                    </StaticRouter>
+                </GlobalData>
             </body>
         </html>
     );

@@ -15,9 +15,13 @@ const app = new Elysia()
     .use(staticPlugin())
     .use(authPlugin)
     .get('/*', async ({ params, user }) => {
-        const app = createElement(ServerApp, { location: params['*'], user });
+        const initData = { username: user?.name || "Guest" };
+        const initDataString = JSON.stringify(initData);
+
+        const app = createElement(ServerApp, { location: "/" + params['*'], user });
         const stream = await renderToReadableStream(app, {
-            bootstrapScripts: ['/public/index.js']
+            bootstrapScripts: ['/public/index.js'],
+            bootstrapScriptContent: `window.__INITIAL_DATA__=${initDataString}`
         });
 
         return new Response(stream, {
