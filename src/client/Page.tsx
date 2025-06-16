@@ -1,7 +1,11 @@
+import { useState } from "react";
 import type { GlobalDataType } from "../common";
 import { GlobalData } from "./GlobalData";
 
 export function Page({ initData, children }: React.PropsWithChildren<{ initData: GlobalDataType }>) {
+    const [username, setUsername] = useState(initData.username);
+    const globalData: GlobalDataType = { username, setUsername };
+
     return (
         <html>
             <head>
@@ -9,7 +13,7 @@ export function Page({ initData, children }: React.PropsWithChildren<{ initData:
                 <title>Vosem</title>
             </head>
             <body>
-                <GlobalData value={initData}>
+                <GlobalData value={globalData}>
                     {children}
                 </GlobalData>
             </body>

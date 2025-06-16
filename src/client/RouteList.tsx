@@ -1,6 +1,8 @@
 import { useContext } from "react";
 import { Link, Route, Routes } from "react-router";
 import { GlobalData } from "./GlobalData";
+import { PageIndex } from "./PageIndex";
+import { PageLogin } from "./PageLogin";
 
 function React1() {
     const data = useContext(GlobalData);
@@ -26,6 +28,8 @@ function React2() {
 
 export const routeList = (
     <Routes>
+        <Route path="/" element={<PageIndex />} />
+        <Route path="/login" element={<PageLogin />} />
         <Route path="/react1" element={< React1 />} />
         <Route path="/react2" element={< React2 />} />
     </Routes>);

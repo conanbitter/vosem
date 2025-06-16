@@ -3,6 +3,7 @@ import { Elysia, t } from "elysia";
 import { db } from "./db/db";
 import * as schema from "./db/schema";
 import { eq } from "drizzle-orm";
+import type { LoginResponse } from './common';
 
 const jwtPlugin = jwt({
     name: 'jwt',
@@ -34,10 +35,11 @@ export const apiRoutes = new Elysia({ prefix: '/api' })
             };
         }
     })
-    .post('/login', async ({ jwt, cookie: { auth }, body }) => {
+    .post('/login', async ({ jwt, cookie: { auth }, body }): Promise<LoginResponse> => {
+        await Bun.sleep(2000);
         const user = (await db.select().from(schema.users).where(eq(schema.users.login, body.login)))[0];
         if (!user) {
-            return { "error": "Login or password is incorrect" };
+            return { "error": true, "message": "Login or password is incorrect" };
         }
         if (await Bun.password.verify(body.password, user.password)) {
             const token = await jwt.sign({ id: user.id, name: user.name });
@@ -49,9 +51,9 @@ export const apiRoutes = new Elysia({ prefix: '/api' })
                 sameSite: true,
                 maxAge: 7 * 86400
             })
-            return { "error": "ok" };
+            return { "error": false, "username": user.name };
         } else {
-            return { "error": "Login or password is incorrect" };
+            return { "error": true, "message": "Login or password is incorrect" };
         }
     }, {
         body: t.Object({
