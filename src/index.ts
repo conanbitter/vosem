@@ -4,6 +4,7 @@ import { staticPlugin } from "@elysiajs/static"
 import { createElement } from "react";
 import { ServerApp } from "./client/App";
 import { renderToReadableStream } from "react-dom/server";
+import type { GlobalDataType } from "./common";
 
 //bundling
 await Bun.build({
@@ -15,10 +16,10 @@ const app = new Elysia()
     .use(staticPlugin())
     .use(authPlugin)
     .get('/*', async ({ params, user }) => {
-        const initData = { username: user?.name || "Guest" };
+        const initData: GlobalDataType = { username: user?.name || "Guest" };
         const initDataString = JSON.stringify(initData);
 
-        const app = createElement(ServerApp, { location: "/" + params['*'], user });
+        const app = createElement(ServerApp, { location: "/" + params['*'], data: initData });
         const stream = await renderToReadableStream(app, {
             bootstrapScripts: ['/public/index.js'],
             bootstrapScriptContent: `window.__INITIAL_DATA__=${initDataString}`
