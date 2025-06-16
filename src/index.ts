@@ -15,8 +15,12 @@ await Bun.build({
 const app = new Elysia()
     .use(staticPlugin())
     .use(authPlugin)
-    .get('/*', async ({ params, user }) => {
-        const initData: GlobalDataType = { username: user?.name || "Guest" };
+    .get('/*', async ({ params, user, redirect }) => {
+        if (!user && params['*'] !== "login") {
+            return redirect("/login");
+        }
+
+        const initData: GlobalDataType = { username: user?.name || "" };
         const initDataString = JSON.stringify(initData);
 
         const app = createElement(ServerApp, { location: "/" + params['*'], data: initData });
