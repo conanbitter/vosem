@@ -5,9 +5,9 @@
   "scripts": {
     "dev": "bun run --watch src/index.ts",
     "start": "bun run src/index.ts",
-    "db_generate": "bunx drizzle-kit generate",
-    "db_migrate": "bun run migrate.ts",
-    "db_studio": "bunx drizzle-kit studio --verbose"
+    "db-generate": "bunx drizzle-kit generate",
+    "db-migrate": "bun run migrate.ts",
+    "db-studio": "bunx drizzle-kit studio --verbose"
   },
   "devDependencies": {
     "@types/bun": "latest",
