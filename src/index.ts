@@ -16,15 +16,17 @@ const app = new Elysia()
     .use(staticPlugin())
     .use(authPlugin)
     .get('/favicon.ico', () => Bun.file("favicon.ico"))
-    .get('/*', async ({ params, user, redirect }) => {
+    .get('/*', async ({ request, query, params, user, redirect }) => {
         if (!user && params['*'] !== "login") {
             return redirect("/login");
         }
 
+        const url = new URL(request.url)
+
         const initData: GlobalDataType = { username: user?.name || "" };
         const initDataString = JSON.stringify(initData);
 
-        const app = createElement(ServerApp, { location: "/" + params['*'], data: initData });
+        const app = createElement(ServerApp, { location: url.pathname + url.search, data: initData });
         const stream = await renderToReadableStream(app, {
             bootstrapScripts: ['/public/index.js'],
             bootstrapScriptContent: `window.__INITIAL_DATA__=${initDataString}`
