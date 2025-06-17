@@ -21,7 +21,7 @@ const app = new Elysia()
             return redirect("/login");
         }
 
-        const url = new URL(request.url)
+        const url = new URL(request.url);
 
         const initData: GlobalDataType = { username: user?.name || "" };
         const initDataString = JSON.stringify(initData);
