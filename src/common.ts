@@ -17,3 +17,14 @@ export type LoginResponse = {
     error: false,
     username: string
 } | ErrorResponse;
+
+export interface TaskListItem {
+    id: number,
+    state: 'active' | 'finished' | 'canceled',
+    title: string
+}
+
+export type TasksResponse = {
+    error: false,
+    list: TaskListItem[]
+} | ErrorResponse;

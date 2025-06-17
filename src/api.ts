@@ -1,9 +1,9 @@
 import { jwt } from '@elysiajs/jwt';
 import { Elysia, t } from "elysia";
 import { db } from "./db/db";
-import { usersTable } from "./db/schema";
+import { tasksTable, usersTable } from "./db/schema";
 import { eq } from "drizzle-orm";
-import type { LoginResponse } from './common';
+import type { LoginResponse, TasksResponse } from './common';
 
 const jwtPlugin = jwt({
     name: 'jwt',
@@ -18,7 +18,7 @@ export const authPlugin = new Elysia()
         if (user) {
             return {
                 user: {
-                    id: user.id as string,
+                    id: user.id as number,
                     name: user.name as string
                 }
             };
@@ -31,7 +31,8 @@ export const apiRoutes = new Elysia({ prefix: '/api' })
     .onError(({ code, error }) => {
         if (code === 'VALIDATION') {
             return {
-                error: error.all.map((item) => item.summary).join(". ")
+                error: true,
+                message: error.all.map((item) => item.summary).join(". ")
             };
         }
     })
@@ -74,6 +75,18 @@ export const apiRoutes = new Elysia({ prefix: '/api' })
             }
         },
         (app) => app
+            .post('/tasklist', async ({ user }): Promise<TasksResponse> => {
+                //await Bun.sleep(2000);
+                const result = await db.select({
+                    "id": tasksTable.id,
+                    "state": tasksTable.state,
+                    "title": tasksTable.title
+                }).from(tasksTable).orderBy(tasksTable.updated).where(eq(tasksTable.author, user!.id));
+                return {
+                    error: false,
+                    list: result
+                }
+            })
             .get('/test', ({ user }) => {
                 return { error: "ok", user };
             })
