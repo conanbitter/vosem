@@ -1,7 +1,7 @@
 import { jwt } from '@elysiajs/jwt';
 import { Elysia, t } from "elysia";
 import { db } from "./db/db";
-import * as schema from "./db/schema";
+import { usersTable } from "./db/schema";
 import { eq } from "drizzle-orm";
 import type { LoginResponse } from './common';
 
@@ -37,7 +37,7 @@ export const apiRoutes = new Elysia({ prefix: '/api' })
     })
     .post('/login', async ({ jwt, cookie: { auth }, body }): Promise<LoginResponse> => {
         await Bun.sleep(2000);
-        const user = (await db.select().from(schema.users).where(eq(schema.users.login, body.login)))[0];
+        const user = (await db.select().from(usersTable).where(eq(usersTable.login, body.login)))[0];
         if (!user) {
             return { "error": true, "message": "Login or password is incorrect" };
         }

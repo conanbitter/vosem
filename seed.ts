@@ -1,7 +1,7 @@
 import { db } from "./src/db/db";
-import * as schema from "./src/db/schema";
+import { usersTable } from "./src/db/schema";
 
-await db.insert(schema.users).values([
+await db.insert(usersTable).values([
     {
         login: "admin",
         password: await Bun.password.hash(process.env.USR_ADMIN_PASS!),
