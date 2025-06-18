@@ -2,7 +2,7 @@ import { jwt } from '@elysiajs/jwt';
 import { Elysia, t } from "elysia";
 import { db } from "./db/db";
 import { tasksTable, usersTable } from "./db/schema";
-import { eq } from "drizzle-orm";
+import { eq, desc } from "drizzle-orm";
 import type { LoginResponse, TasksResponse } from './common';
 
 const jwtPlugin = jwt({
@@ -81,7 +81,7 @@ export const apiRoutes = new Elysia({ prefix: '/api' })
                     "id": tasksTable.id,
                     "state": tasksTable.state,
                     "title": tasksTable.title
-                }).from(tasksTable).orderBy(tasksTable.updated).where(eq(tasksTable.author, user!.id));
+                }).from(tasksTable).orderBy(desc(tasksTable.updated)).where(eq(tasksTable.author, user!.id));
                 return {
                     error: false,
                     list: result
