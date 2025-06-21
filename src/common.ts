@@ -1,6 +1,7 @@
 export interface GlobalDataType {
     username: string
-    setUsername?: (newName: string) => void
+    setUsername?: (newName: string) => void,
+    tasks?: TasksData
 }
 
 export interface LoginQuery {
@@ -28,8 +29,11 @@ export interface TaskListItem {
     title: string
 }
 
-export type TasksResponse = {
-    error: false,
+export interface TasksData {
     list: TaskListItem[],
     pages: number
-} | ErrorResponse;
+}
+
+export type TasksResponse = {
+    error: false,
+} & TasksData | ErrorResponse;

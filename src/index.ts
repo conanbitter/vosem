@@ -5,6 +5,7 @@ import { createElement } from "react";
 import { ServerApp } from "./client/App";
 import { renderToReadableStream } from "react-dom/server";
 import type { GlobalDataType } from "./common";
+import * as tasks from "./db/tasks";
 
 //bundling
 await Bun.build({
@@ -43,8 +44,23 @@ const app = new Elysia()
         },
         (app) => app
             .get('/', ({ redirect }) => redirect("/tasks"))
-            .get('/tasks', async ({ request, user }) => {
-                return await NewResponse(request, { username: user?.name || "" });
+            .get('/tasks', async ({ request, user, query, redirect }) => {
+                let page = 1;
+                if (query["page"]) {
+                    const pageQuery = parseInt(query["page"]);
+                    if (Number.isNaN(pageQuery)) {
+                        return redirect("/tasks")
+                    }
+                    if (pageQuery < 0) return redirect("/tasks?page=1");
+                    const pagesCount = await tasks.getPageCount(user!.id);
+                    if (pageQuery > pagesCount) return redirect(`/tasks?page=${pagesCount}`);
+                    page = pageQuery;
+                }
+                const tasksData = {
+                    list: await tasks.getTasks(user!.id, page),
+                    pages: await tasks.getPageCount(user!.id)
+                }
+                return await NewResponse(request, { username: user?.name || "", tasks: tasksData });
             })
     )
     /*    .get('/*', async ({ request, params, user, redirect }) => {

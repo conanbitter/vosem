@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { GlobalData } from "./GlobalData";
 import type { TasksResponse, TaskListItem } from "../common";
 import { useSearchParams } from "react-router";
@@ -24,6 +24,8 @@ interface TaskListProps {
 function TaskList(props: TaskListProps) {
     const [list, setList] = useState<TaskListItem[]>([]);
     const [isLoading, setIsLoading] = useState(false);
+    const globalData = useContext(GlobalData);
+    const isInitialMount = useRef(true);
 
     async function fetchList() {
         try {
@@ -53,7 +55,17 @@ function TaskList(props: TaskListProps) {
     }
 
     useEffect(() => {
-        fetchList();
+        let loaded = false;
+        if (isInitialMount.current) {
+            if (globalData.tasks) {
+                setList(globalData.tasks.list)
+                loaded = true;
+            }
+            isInitialMount.current = false;
+        }
+        if (!loaded) {
+            fetchList();
+        }
     }, [props.page]);
 
     const htmlList = list.map((item) => (
