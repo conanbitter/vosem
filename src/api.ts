@@ -2,8 +2,10 @@ import { jwt } from '@elysiajs/jwt';
 import { Elysia, t } from "elysia";
 import { db } from "./db/db";
 import { tasksTable, usersTable } from "./db/schema";
-import { eq, desc } from "drizzle-orm";
+import { eq, desc, count } from "drizzle-orm";
 import type { LoginResponse, TasksResponse } from './common';
+
+const TASKS_PER_PAGE = 11;
 
 const jwtPlugin = jwt({
     name: 'jwt',
@@ -75,17 +77,32 @@ export const apiRoutes = new Elysia({ prefix: '/api' })
             }
         },
         (app) => app
-            .post('/tasklist', async ({ user }): Promise<TasksResponse> => {
+            .post('/tasklist', async ({ user, body }): Promise<TasksResponse> => {
                 //await Bun.sleep(2000);
+                const { allTasks } = (await db.select({
+                    allTasks: count()
+                }).from(tasksTable).where(eq(tasksTable.author, user!.id)))[0]!;
+
                 const result = await db.select({
                     "id": tasksTable.id,
                     "state": tasksTable.state,
                     "title": tasksTable.title
-                }).from(tasksTable).orderBy(desc(tasksTable.updated)).where(eq(tasksTable.author, user!.id));
+                })
+                    .from(tasksTable)
+                    .orderBy(tasksTable.id) //desc(tasksTable.updated)
+                    .where(eq(tasksTable.author, user!.id))
+                    .limit(TASKS_PER_PAGE)
+                    .offset((body.page - 1) * TASKS_PER_PAGE);
+
                 return {
                     error: false,
-                    list: result
+                    list: result,
+                    pages: Math.ceil(allTasks / TASKS_PER_PAGE)
                 }
+            }, {
+                body: t.Object({
+                    page: t.Number(),
+                })
             })
             .get('/test', ({ user }) => {
                 return { error: "ok", user };

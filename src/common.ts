@@ -18,6 +18,10 @@ export type LoginResponse = {
     username: string
 } | ErrorResponse;
 
+export interface TasksQuery {
+    page: number,
+}
+
 export interface TaskListItem {
     id: number,
     state: 'active' | 'finished' | 'canceled',
@@ -26,5 +30,6 @@ export interface TaskListItem {
 
 export type TasksResponse = {
     error: false,
-    list: TaskListItem[]
+    list: TaskListItem[],
+    pages: number
 } | ErrorResponse;
