@@ -18,7 +18,8 @@ function Paginator(props: PaginatorProps) {
 }
 
 interface TaskListProps {
-    page: number
+    page: number,
+    onPageCountChange: (newCount: number) => void
 }
 
 function TaskList(props: TaskListProps) {
@@ -43,6 +44,7 @@ function TaskList(props: TaskListProps) {
                     console.error("Error fetching list:", data.message);
                 } else {
                     setList(data.list);
+                    props.onPageCountChange(data.pages);
                 }
             } else {
                 console.error(`Error fetching list (code ${response.status})`);
@@ -69,27 +71,33 @@ function TaskList(props: TaskListProps) {
     }, [props.page]);
 
     const htmlList = list.map((item) => (
-        <tr key={item.id}>
-            <td>{item.id}</td>
-            <td>{item.state}</td>
-            <td>{item.title}</td>
-        </tr>
+        isLoading ? <tr key={item.id}>Loading...</tr> :
+            <tr key={item.id}>
+                <td>{item.id}</td>
+                <td>{item.state}</td>
+                <td>{item.title}</td>
+            </tr>
     ));
 
     return (
-        isLoading ? <p>Loading...</p> : (
-            <table>
-                <tbody>
-                    {htmlList}
-                </tbody>
-            </table>
-        )
-    );
+        <table>
+            <tbody>
+                {htmlList}
+            </tbody>
+        </table>
+    )
 }
 
 export function PageTasks() {
-
     const [searchParams, setSearchParams] = useSearchParams();
+    const [pageCount, setPageCount] = useState(0);
+    const globalData = useContext(GlobalData);
+
+    useEffect(() => {
+        if (globalData.tasks) {
+            setPageCount(globalData.tasks.pages);
+        }
+    }, []);
 
     function getPage(): number {
         const page = parseInt(searchParams.get("page") || "");
@@ -102,8 +110,8 @@ export function PageTasks() {
 
     return (
         <>
-            <TaskList page={getPage()} />
-            <Paginator page={getPage()} pageCount={10} onChangePage={setPage} />
+            <TaskList page={getPage()} onPageCountChange={setPageCount} />
+            <Paginator page={getPage()} pageCount={pageCount} onChangePage={setPage} />
         </>
     );
 }
