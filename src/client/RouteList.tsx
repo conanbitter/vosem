@@ -1,7 +1,7 @@
 import { useContext } from "react";
 import { Link, Route, Routes, useSearchParams } from "react-router";
 import { GlobalData } from "./GlobalData";
-import { PageIndex } from "./PageIndex";
+import { PageTasks } from "./PageTasks";
 import { PageLogin } from "./PageLogin";
 
 function React1() {
@@ -30,7 +30,7 @@ function React2() {
 
 export const routeList = (
     <Routes>
-        <Route path="/" element={<PageIndex />} />
+        <Route path="/tasks" element={<PageTasks />} />
         <Route path="/login" element={<PageLogin />} />
         <Route path="/react1" element={< React1 />} />
         <Route path="/react2" element={< React2 />} />

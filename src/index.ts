@@ -12,30 +12,47 @@ await Bun.build({
     outdir: './public',
 });
 
+async function NewResponse(request: Request, globalData: GlobalDataType): Promise<Response> {
+    const url = new URL(request.url);
+
+    const initData = JSON.stringify(globalData);
+
+    const app = createElement(ServerApp, { location: url.pathname + url.search, data: globalData });
+    const stream = await renderToReadableStream(app, {
+        bootstrapScripts: ['/public/index.js'],
+        bootstrapScriptContent: `window.__INITIAL_DATA__=${initData}`
+    });
+
+    return new Response(stream, {
+        headers: { 'Content-Type': 'text/html' }
+    });
+}
+
 const app = new Elysia()
     .use(staticPlugin())
     .use(authPlugin)
     .get('/favicon.ico', () => Bun.file("favicon.ico"))
-    .get('/*', async ({ request, params, user, redirect }) => {
-        if (!user && params['*'] !== "login") {
-            return redirect("/login");
-        }
-
-        const url = new URL(request.url);
-
-        const initData: GlobalDataType = { username: user?.name || "" };
-        const initDataString = JSON.stringify(initData);
-
-        const app = createElement(ServerApp, { location: url.pathname + url.search, data: initData });
-        const stream = await renderToReadableStream(app, {
-            bootstrapScripts: ['/public/index.js'],
-            bootstrapScriptContent: `window.__INITIAL_DATA__=${initDataString}`
-        });
-
-        return new Response(stream, {
-            headers: { 'Content-Type': 'text/html' }
-        });
-    })
+    .get('/login', async ({ request }) => await NewResponse(request, { username: "" }))
+    .guard(
+        {
+            async beforeHandle({ user, redirect }) {
+                if (!user) {
+                    return redirect("/login");
+                }
+            }
+        },
+        (app) => app
+            .get('/', ({ redirect }) => redirect("/tasks"))
+            .get('/tasks', async ({ request, user }) => {
+                return await NewResponse(request, { username: user?.name || "" });
+            })
+    )
+    /*    .get('/*', async ({ request, params, user, redirect }) => {
+            if (!user && params['*'] !== "login") {
+                return redirect("/login");
+            }
+            return await NewResponse(request, { username: user?.name || "" });
+        })*/
     .use(apiRoutes)
     .listen(3000);
 

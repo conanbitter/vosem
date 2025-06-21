@@ -75,7 +75,7 @@ function TaskList(props: TaskListProps) {
     );
 }
 
-export function PageIndex() {
+export function PageTasks() {
 
     const [searchParams, setSearchParams] = useSearchParams();
 
