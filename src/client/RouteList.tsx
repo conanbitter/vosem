@@ -10,9 +10,10 @@ function React1() {
     return (
         <>
             <h3>React 1 </h3>
-            < p > User {data.username} </p>
+            <p> User {data.username} </p>
             <p> Page {searchParams.get("page")}</p>
-            < Link to="/react2" > To react2 </Link>
+            <Link to="/react2"> To react2 </Link>
+            <Link to="/tasks?page=3"> To tasks </Link>
         </>
     )
 }
@@ -32,6 +33,6 @@ export const routeList = (
     <Routes>
         <Route path="/tasks" element={<PageTasks />} />
         <Route path="/login" element={<PageLogin />} />
-        <Route path="/react1" element={< React1 />} />
+        <Route path="/test" element={< React1 />} />
         <Route path="/react2" element={< React2 />} />
     </Routes>);

@@ -1,7 +1,7 @@
 import { useContext, useEffect, useRef, useState } from "react";
 import { GlobalData } from "./GlobalData";
 import type { TasksResponse, TaskListItem } from "../common";
-import { useSearchParams } from "react-router";
+import { Link, useSearchParams } from "react-router";
 
 interface PaginatorProps {
     page: number,
@@ -110,6 +110,7 @@ export function PageTasks() {
 
     return (
         <>
+            <Link to="/test"> To test </Link>
             <TaskList page={getPage()} onPageCountChange={setPageCount} />
             <Paginator page={getPage()} pageCount={pageCount} onChangePage={setPage} />
         </>

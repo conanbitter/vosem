@@ -62,6 +62,9 @@ const app = new Elysia()
                 }
                 return await NewResponse(request, { username: user?.name || "", tasks: tasksData });
             })
+            .get('/test', async ({ request, user }) => {
+                return await NewResponse(request, { username: user?.name || "" });
+            })
     )
     /*    .get('/*', async ({ request, params, user, redirect }) => {
             if (!user && params['*'] !== "login") {
