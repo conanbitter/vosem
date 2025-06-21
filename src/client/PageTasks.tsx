@@ -25,7 +25,6 @@ interface TaskListProps {
 function TaskList(props: TaskListProps) {
     const [list, setList] = useState<TaskListItem[]>(GlobalData.tasks?.list || []);
     const [isLoading, setIsLoading] = useState(false);
-    const isInitialMount = useRef(true);
 
     async function fetchList() {
         try {
@@ -56,8 +55,8 @@ function TaskList(props: TaskListProps) {
     }
 
     useEffect(() => {
-        if (isInitialMount.current) {
-            isInitialMount.current = false;
+        if (GlobalData.tasks) {
+            GlobalData.tasks = undefined;
         } else {
             fetchList();
         }
@@ -84,12 +83,6 @@ function TaskList(props: TaskListProps) {
 export function PageTasks() {
     const [searchParams, setSearchParams] = useSearchParams();
     const [pageCount, setPageCount] = useState(GlobalData.tasks?.pages || 0);
-
-    useEffect(() => {
-        if (GlobalData.tasks) {
-            setPageCount(GlobalData.tasks.pages);
-        }
-    }, []);
 
     function getPage(): number {
         const page = parseInt(searchParams.get("page") || "");
