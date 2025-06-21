@@ -1,6 +1,10 @@
+export interface GlobalUserDataType {
+    username: string
+    setUsername: (newName: string) => void,
+}
+
 export interface GlobalDataType {
     username: string
-    setUsername?: (newName: string) => void,
     tasks?: TasksData
 }
 

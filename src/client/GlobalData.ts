@@ -1,5 +1,7 @@
 import { createContext } from "react"
-import type { GlobalDataType } from "../common";
+import type { GlobalDataType, GlobalUserDataType } from "../common";
 
-const defaultData: GlobalDataType = { username: "Guest" };
-export const GlobalData = createContext(defaultData);
+const defaultUserData: GlobalUserDataType = { username: "Guest", setUsername: () => { } };
+export const GlobalUserData = createContext(defaultUserData);
+
+export const GlobalData: GlobalDataType = { username: "Guest" }

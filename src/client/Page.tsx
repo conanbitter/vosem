@@ -1,10 +1,10 @@
 import { useState } from "react";
-import type { GlobalDataType } from "../common";
-import { GlobalData } from "./GlobalData";
+import type { GlobalDataType, GlobalUserDataType } from "../common";
+import { GlobalUserData } from "./GlobalData";
 
-export function Page({ initData, children }: React.PropsWithChildren<{ initData: GlobalDataType }>) {
-    const [username, setUsername] = useState(initData.username);
-    const globalData: GlobalDataType = { ...initData, setUsername };
+export function Page({ initUsername, children }: React.PropsWithChildren<{ initUsername: string }>) {
+    const [username, setUsername] = useState(initUsername);
+    const globalUserData: GlobalUserDataType = { username, setUsername };
 
     return (
         <html>
@@ -13,9 +13,9 @@ export function Page({ initData, children }: React.PropsWithChildren<{ initData:
                 <title>Vosem</title>
             </head>
             <body>
-                <GlobalData value={globalData}>
+                <GlobalUserData value={globalUserData}>
                     {children}
-                </GlobalData>
+                </GlobalUserData>
             </body>
         </html>
     );

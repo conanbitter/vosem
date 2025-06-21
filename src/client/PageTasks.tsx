@@ -25,7 +25,6 @@ interface TaskListProps {
 function TaskList(props: TaskListProps) {
     const [list, setList] = useState<TaskListItem[]>([]);
     const [isLoading, setIsLoading] = useState(false);
-    const globalData = useContext(GlobalData);
     const isInitialMount = useRef(true);
 
     async function fetchList() {
@@ -59,8 +58,8 @@ function TaskList(props: TaskListProps) {
     useEffect(() => {
         let loaded = false;
         if (isInitialMount.current) {
-            if (globalData.tasks) {
-                setList(globalData.tasks.list)
+            if (GlobalData.tasks) {
+                setList(GlobalData.tasks.list)
                 loaded = true;
             }
             isInitialMount.current = false;
@@ -71,7 +70,7 @@ function TaskList(props: TaskListProps) {
     }, [props.page]);
 
     const htmlList = list.map((item) => (
-        isLoading ? <tr key={item.id}>Loading...</tr> :
+        isLoading ? <tr key={item.id}><td></td><td></td><td>Loading...</td></tr> :
             <tr key={item.id}>
                 <td>{item.id}</td>
                 <td>{item.state}</td>
@@ -91,11 +90,10 @@ function TaskList(props: TaskListProps) {
 export function PageTasks() {
     const [searchParams, setSearchParams] = useSearchParams();
     const [pageCount, setPageCount] = useState(0);
-    const globalData = useContext(GlobalData);
 
     useEffect(() => {
-        if (globalData.tasks) {
-            setPageCount(globalData.tasks.pages);
+        if (GlobalData.tasks) {
+            setPageCount(GlobalData.tasks.pages);
         }
     }, []);
 

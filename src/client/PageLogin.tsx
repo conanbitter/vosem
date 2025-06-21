@@ -1,13 +1,13 @@
 import { useActionState, useContext, useState } from "react";
 import type { LoginQuery, LoginResponse } from "../common"
 import { useNavigate } from "react-router";
-import { GlobalData } from "./GlobalData";
+import { GlobalUserData } from "./GlobalData";
 
 export function PageLogin() {
     const [fields, setFields] = useState({ login: "", password: "" });
     const [message, action, isPending] = useActionState(commitLogin, "");
     let navigate = useNavigate();
-    const { setUsername } = useContext(GlobalData);
+    const { setUsername } = useContext(GlobalUserData);
 
 
     async function commitLogin(prevState: string, formData: FormData) {

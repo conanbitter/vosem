@@ -1,11 +1,11 @@
 import { useContext } from "react";
 import { Link, Route, Routes, useSearchParams } from "react-router";
-import { GlobalData } from "./GlobalData";
+import { GlobalUserData } from "./GlobalData";
 import { PageTasks } from "./PageTasks";
 import { PageLogin } from "./PageLogin";
 
 function React1() {
-    const data = useContext(GlobalData);
+    const data = useContext(GlobalUserData);
     const [searchParams, setSearchParams] = useSearchParams();
     return (
         <>
@@ -19,7 +19,7 @@ function React1() {
 }
 
 function React2() {
-    const data = useContext(GlobalData);
+    const data = useContext(GlobalUserData);
     return (
         <>
             <h3>React 2 </h3>

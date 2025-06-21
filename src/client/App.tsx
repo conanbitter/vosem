@@ -2,10 +2,11 @@ import { BrowserRouter, StaticRouter } from "react-router";
 import { routeList } from "./RouteList";
 import type { GlobalDataType } from "../common";
 import { Page } from "./Page";
+import { GlobalData } from "./GlobalData";
 
-export function ClientApp({ data }: { data: GlobalDataType }) {
+export function ClientApp({ username }: { username: string }) {
     return (
-        <Page initData={data}>
+        <Page initUsername={username}>
             <BrowserRouter>
                 {routeList}
             </BrowserRouter>
@@ -14,8 +15,9 @@ export function ClientApp({ data }: { data: GlobalDataType }) {
 }
 
 export function ServerApp({ location, data }: { location: string, data: GlobalDataType }) {
+    GlobalData.tasks = data.tasks;
     return (
-        <Page initData={data}>
+        <Page initUsername={data.username}>
             <StaticRouter location={location}>
                 {routeList}
             </StaticRouter>
